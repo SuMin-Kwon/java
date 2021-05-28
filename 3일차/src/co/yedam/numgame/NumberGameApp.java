@@ -1,5 +1,8 @@
 package co.yedam.numgame;
-
+/*
+ * 숫자 맞추기 게임 
+ * 작성자: 권수민
+ */
 public class NumberGameApp {
 	
 	int com;
