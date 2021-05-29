@@ -1,12 +1,11 @@
-package co.yedam.app.baseball;
+package co.yedam.numgame;
 
 public class AppMain {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		BaseBallApp app = new BaseBallApp();
-		app.start();
-		
+		NumberGameApp number = new NumberGameApp();
+		number.start();
 	}
 
 }
