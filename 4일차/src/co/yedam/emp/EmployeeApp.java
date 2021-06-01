@@ -8,20 +8,20 @@ public class EmployeeApp {
 	
 
 	Scanner scanner = new Scanner(System.in);
-	Employee[] employee = new Employee[10];
+	Employee[] employee;  // 배열을 선언
 	int cnt = 0;
 	
-	void insert(int employeeId , String name, int departmentId, int salary, String email) {
-
-		employee[cnt] = new Employee(employeeId, name,departmentId ,salary,email);
-		cnt++;
-	}
+//	void insert(int employeeId , String name, int departmentId, int salary, String email) {
+//
+//		employee[cnt] = new Employee(employeeId, name,departmentId ,salary,email); // class Employee를 배열에 담겠다는 내용임
+//		cnt++;  // 추가 되어야지만 각각의 employee의 값을 하나씩 담을 수 있슴
+//	}
 	
 	//사원수 입력
 	void init() {
 		System.out.println("사원수>");
 		int num = scanner.nextInt();
-		employee = new Employee[num];
+		employee = new Employee[num];  // 맨 위에서 선언한 배열에다가 입력받은 수만큼 방을 만들겠다는 말임 
 	}
 	// 사원정보입력
 	void input() {
