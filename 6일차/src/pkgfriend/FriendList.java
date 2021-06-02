@@ -17,22 +17,34 @@ public class FriendList implements FriendAccess {
 	public void insert(Friend friend) {
 		friends.add(friend);
 	}
-	//수정
+	//수정   set
+
 	@Override
 	public void update(Friend friend) {
-		// TODO Auto-generated method stub
-		
+		int cnt= 0;
+		for ( Friend f : friends) {
+			if (f.getName().equals(friend.getName())) { // contains 등등
+				friends.set(cnt, friend);			
+			} else {
+				cnt++;
+			}
+		}
 	}
-	//삭제
+	
+	//삭제 검색해서 삭제
+
 	@Override
 	public void delete(String name) {
-		// TODO Auto-generated method stub
-		
+		for ( Friend f : friends) {
+			if (f.getName().equals(name)) { // contains 등등
+				friends.remove(f);
+			}
+		}
 	}
 	// 전체조회
 	@Override
 	public void selectAll() {
-		System.out.println("FriendList");
+		System.out.println(friends);
 	}
 	// 검색
 	@Override

@@ -28,5 +28,6 @@ public interface FriendAccess {
 	
 	// 단건조회
 	public Friend selectOne(String name);
+
 	
 }
