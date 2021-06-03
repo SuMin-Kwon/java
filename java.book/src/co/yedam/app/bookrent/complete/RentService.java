@@ -2,7 +2,7 @@ package co.yedam.app.bookrent.complete;
 
 import java.util.Scanner;
 
-public class RentService extends Rent implements Service {
+public class RentService implements Service {
 
 	Rent [] rent;
 	int cnt;
