@@ -2,7 +2,7 @@ package co.yedam.app.bookrent.complete;
 
 import java.util.Scanner;
 
-public class MemberService extends Member implements Service{
+public class MemberService implements Service{
 	
 	Member[] member;
 	int cnt;

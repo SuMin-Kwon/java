@@ -15,11 +15,11 @@ public class DmbCellPhoneExample {
 		dmb.bell();
 		
 		System.out.println("=================");
-		dmb.receiveVoice(" 지금 머해?");
-		dmb.sendVoice(" 집임 Tv봄");
-		dmb.receiveVoice(" 밖인데, 나올래?");
-		dmb.sendVoice(" 노노");
-		dmb.receiveVoice(" ㅠㅠ, ㅇㅋ");
+		dmb.receiveVoice(" ....");
+		dmb.sendVoice(" ....");
+		dmb.receiveVoice(" ....?");
+		dmb.sendVoice(" ...");
+		dmb.receiveVoice(" ....");
 		System.out.println("=================");
 		
 		dmb.hangUp();

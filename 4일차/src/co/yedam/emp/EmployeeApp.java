@@ -52,10 +52,17 @@ public class EmployeeApp {
 		System.out.print("검색할 사번>");
 		int no = scanner.nextInt();
 		String named;
+		String emaild;
+		String bo;
+		int salary;
 		for (int i=0; i<= cnt; i++) {
 			if (no == (employee[i].employeeId)) {
 				named = employee[i].name;
-			System.out.println("이름은 "+ named);	
+				emaild = employee[i].email;
+				bo = employee[i].departmentName;
+				salary = employee[i].salary;
+				
+			System.out.println(named+ "\t"+ bo + "\t"+ salary + "\t"+ emaild);	
 			break;
 			}
 //		else {

@@ -61,6 +61,7 @@ public class MemoCliApp {
 	private void listAll() {
 		List<Memo> list = memolist.listAll();
 		for (Memo memo : list) {
+			//System.out.println(memo.getDate() + " : " + memo.getContent());
 			System.out.println(memo);
 		}
 		
