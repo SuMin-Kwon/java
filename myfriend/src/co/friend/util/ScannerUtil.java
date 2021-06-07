@@ -90,6 +90,7 @@ public class ScannerUtil {
 		return memo;
 	}
 	
+	// 입력을 여러줄로
 	public static String readMultiLine() {
 		StringBuffer result = new StringBuffer();
 		try {

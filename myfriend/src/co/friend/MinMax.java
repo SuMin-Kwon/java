@@ -23,7 +23,7 @@ public class MinMax {
 		String[] SpStr = str.split(" ");
 		
 		int max = Integer.parseInt(SpStr[0]);
-		int min = Integer.parseInt(SpStr[0]);
+		int min = Integer.parseInt(SpStr[1]);
 		
 		for (int i =0; i < N; i++) {
 			int num = Integer.parseInt(SpStr[i]);
@@ -61,10 +61,12 @@ public class MinMax {
 				// 문제풀이 3번
 				
 //		Scanner scanner = new Scanner(System.in);
-				
+//				
 //			System.out.print("숫자갯수 입력:");
 //			int n = scanner.nextInt();		
+//
 //			int nums[] = new int[n];
+//			
 //			for (int i=0; i<n; i++) {
 //				nums[i] = scanner.nextInt();
 //			}
@@ -82,8 +84,8 @@ public class MinMax {
 //				}
 //			}
 //			System.out.println(max + " " + min);
-				
-		
+//				
+//		
 		
 		
 	}

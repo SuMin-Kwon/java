@@ -14,7 +14,7 @@ public class MemoList implements MemoAccess {
 	ArrayList<Memo> memos;
 
 	// open
-	String path = "c:/dev/memo.txt";
+	String path = "d:/temp/memo.txt";
 
 	public void open() {
 		try {
