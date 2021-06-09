@@ -2,20 +2,25 @@ package co.friend.view;
 
 import java.util.List;
 
-import co.friend.access.FriendList;
+import co.friend.access.FriendAccess;
+import co.friend.access.FriendDAO;
 import co.friend.model.Friend;
 import co.friend.util.ScannerUtil;
 
 public class FriendCliApp {
 	
-	FriendList friendList = new FriendList();
+//	FriendList friendList = new FriendList();// 파일에 저장하는 기능이 담겨져있는 FriendList임
+	
+	FriendAccess friendList = new FriendDAO();
+	
+	//프로그램 시작
 	public void  start() {
 		
 		int menunum;
 		do {
 			menuTitle();   // 메뉴출력
 			menunum = ScannerUtil.readInt("입력"); // 메뉴 선택
-			switch (menunum) {
+			switch (menunum) {					   // 실행
 			case 1 : insert(); 		break;
 			case 2 : update(); 		break;
 			case 3 : delete(); 		break;
@@ -48,7 +53,7 @@ public class FriendCliApp {
 	}
 	// 이름 검색
 	private void findNum() {
-		String name = ScannerUtil.readStr();
+		String name = ScannerUtil.readStr("조회할 이름");
 		Friend friend = friendList.selectOne(name);
 		System.out.println(friend);
 	}
@@ -62,19 +67,19 @@ public class FriendCliApp {
 	}
 	// 이름으로 검색해서 삭제
 	private void delete() {
-		String name = ScannerUtil.readStr("삭제할 이름입력>");
+		String name = ScannerUtil.readStr("삭제할 이름입력");
 		friendList.delete(name);
 		
 	}
-	
+	// 수정
 	private void update() {
 		Friend friend = new Friend();
-		friend.setName(ScannerUtil.readStr("이름>"));
+		friend.setName(ScannerUtil.readStr("(동일한이름 x)이름"));
 		friend.setTel(ScannerUtil.readStr("바꿀 번호"));
 		friendList.update(friend);
 		
 	}
-	
+	// 친구등록
 	private void insert() {
 		Friend friend = ScannerUtil.readFriend();
 		friendList.insert(friend);

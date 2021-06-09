@@ -21,10 +21,10 @@ public class Friend {
 		}
 		@Override
 		public String toString() {
-			return "Friend [gubun=" + gubun + ", name=" + name + ", tel=" + tel + "]";
+			return "Friend [ gubun: " + gubun + ", name: " + name + ", tel: " + tel + " ]";
+		}
 			
 		// setter : getter	
-		}
 		public String getGubun() {
 			return gubun;
 		}
@@ -42,6 +42,23 @@ public class Friend {
 		}
 		public void setTel(String tel) {
 			this.tel = tel;
+		}
+		
+		// object의 hashcode 오버라이딩
+		@Override
+		public int hashCode() {
+			return  this.getGubun().hashCode() +
+					this.getName().hashCode() +
+					this.getTel().hashCode();
+		}
+
+		// object의 equals 오버라이딩 
+		@Override
+		public boolean equals(Object obj) {
+			Friend f = (Friend)obj; // obj 최상위라서 모든 형변환이 가능
+			return this.getGubun().equals(f.getGubun()) 
+				&& this.getName().equals(f.getName()) 
+				&& this.getTel().equals(f.getTel());
 		}
 
 		
