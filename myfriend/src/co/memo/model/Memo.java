@@ -19,7 +19,7 @@ public class Memo {
 
 	@Override
 	public String toString() {
-		return "Memo [date=" + date + ", content=" + content + "]";
+		return "Memo [ 날짜 : " + date + ", 메모 : " + content + " ]";
 	}
 
 	public String getDate() {

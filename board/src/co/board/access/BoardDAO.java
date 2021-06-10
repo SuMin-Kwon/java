@@ -18,7 +18,30 @@ public class BoardDAO implements BoardAccess{
 	static PreparedStatement psmt;
 	static ResultSet rs;
 	static Connection conn;
-
+	
+	// 로그인
+	public boolean rogin(String id, String pw) {
+		boolean t = false;
+		connect();
+		String sql = "SELECT *FROM rogin WHERE id = ? AND pw = ? ";
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1,id);
+			psmt.setString(2,pw);
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				t = true;
+			} else {
+				t = false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+		return t;
+	}
 	
 	
 	// 수정
@@ -50,7 +73,7 @@ public class BoardDAO implements BoardAccess{
 			System.out.println(r + "건 삭제되었습니다.");
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally { // 실행 했건 안했건 무조건 실행 해주는것
+		}finally { 
 			close();
 		}	
 	}
@@ -61,7 +84,7 @@ public class BoardDAO implements BoardAccess{
 		
 		ArrayList<Board> boardList = new ArrayList<>();
 		connect();
-		String sql = "SELECT b_id,b_tile,b_writer FROM board";
+		String sql = "SELECT b_id,b_title,b_writer FROM board";
 		try {
 			psmt = conn.prepareStatement(sql);
 			rs = psmt.executeQuery();
@@ -110,9 +133,9 @@ public class BoardDAO implements BoardAccess{
 		String url = "jdbc:sqlite:C:/sqlite/db/sample.db";
 		try {
 			conn = DriverManager.getConnection(url);
-			System.out.println("연결성공!!!");
 
 		} catch (SQLException e) {
+			System.out.println("연결실패....");
 			e.printStackTrace();
 		}
 

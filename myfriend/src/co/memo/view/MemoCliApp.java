@@ -1,15 +1,18 @@
 package co.memo.view;
 
 import java.util.List;
+import java.util.Scanner;
 
 import co.friend.util.ScannerUtil;
-import co.memo.access.MemoList;
+import co.memo.access.MemoAccess;
+import co.memo.access.MemoDAO;
 import co.memo.model.Memo;
 
 public class MemoCliApp {
 
-	MemoList memolist = new MemoList();
-
+	Scanner scanner = new Scanner(System.in);
+//	MemoList memolist = new MemoList();
+	MemoAccess memolist = new MemoDAO();
 	public void start() {
 
 		int menunum;
@@ -39,7 +42,7 @@ public class MemoCliApp {
 			}
 		} while (menunum != 0);
 	}
-
+	
 	private void insert() {
 		Memo memo = ScannerUtil.readMemo();
 		memolist.insert(memo);
@@ -47,8 +50,9 @@ public class MemoCliApp {
 
 	private void update() {
 		Memo memo = new Memo();
-		memo.setDate(ScannerUtil.readStr("날짜"));
-		memo.setContent(ScannerUtil.readStr("내용"));
+		memo.setDate(ScannerUtil.readStr("날짜 ex)2021-06-01 "));
+		System.out.println("수정할 메모 입력:");
+		memo.setContent(ScannerUtil.readMultiLine());
 		memolist.update(memo);
 	}
 
@@ -68,7 +72,7 @@ public class MemoCliApp {
 	}
 
 	private void findDate() {
-		String date = ScannerUtil.readStr("날짜입력");
+		String date = ScannerUtil.readStr("날짜검색 (ex)2021-06-01");
 		Memo memo = memolist.findDate(date);
 		System.out.println(memo);
 		

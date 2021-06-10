@@ -6,7 +6,33 @@ public class Board {
 	String b_title;
 	String b_content;
 	String b_writer;
+	String id;
+	String pw;
 	
+	public String getId() {
+		return id;
+	}
+
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
+
+	public String getPw() {
+		return pw;
+	}
+
+
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
+
+
 	public Board() {}
 	
 	
@@ -62,12 +88,12 @@ public class Board {
 	}
 
 	public String showInfo() {
-		return "Board [b_id=" + b_id + ", b_title=" + b_title + ", b_writer=" + b_writer + "]";
+		return "글번호: " + b_id + ",  글제목< " + b_title + " >  ,작성자:" + b_writer ;
 	}
 
 	@Override
 	public String toString() {
-		return "Board [b_id=" + b_id + ", b_title=" + b_title + ", b_content=" + b_content + ", b_writer=" + b_writer
+		return "[ 글번호: " + b_id + "   글제목< " + b_title + " >  내용: " + b_content + "   작성자: " + b_writer
 				+ "]";
 	}
 

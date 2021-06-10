@@ -78,9 +78,9 @@ public class ScannerUtil {
 	}
 	// 메모입력
 	public static Memo readMemo() {
-		System.out.print("날짜");
-		String date = scanner.next();
-		System.out.print("내용");
+		System.out.print("날짜 (ex)2020-06-01");
+		String date = scanner.next(); scanner.nextLine();
+		System.out.print("내용 ");
 		String content = readMultiLine();
 		Memo memo = new Memo(date,content);
 		

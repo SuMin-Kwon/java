@@ -21,6 +21,8 @@ public interface BoardAccess {
 			// 단건조회
 			public Board findDate(int id);
 
+			public boolean rogin(String id, String pw);
+
 			
 	
 }
