@@ -50,7 +50,7 @@ class MyAuthentication extends Authenticator {
  
     public MyAuthentication(){
         String id = "rnjstnals120";
-        String pw = "[kwon5582]";
+        String pw = "";
         account = new PasswordAuthentication(id, pw);
     }
  
