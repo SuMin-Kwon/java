@@ -23,6 +23,12 @@ public interface BoardAccess {
 
 			public boolean rogin(String id, String pw);
 
+			public void reply(String title, String content, String writer, int parentid);
+
+			public ArrayList<Board> replyShow(int id);
+
+			public boolean roginTrueKey(int id2, String id);
+
 			
 	
 }

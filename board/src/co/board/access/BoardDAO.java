@@ -19,11 +19,109 @@ public class BoardDAO implements BoardAccess{
 	static ResultSet rs;
 	static Connection conn;
 	
-	// 로그인
+	// 아이디랑 작성자값 비교
+
+	@Override
+	public boolean roginTrueKey(int id, String u_id) {
+		connect();
+		String sql = "select * from board where b_id=? and b_writer = ?"; 
+		boolean bb = false;
+		try {
+			psmt = conn.prepareStatement(sql); 
+			psmt.setInt(1, id);
+			psmt.setString(2, u_id);
+			rs = psmt.executeQuery();
+			if  (rs.next()) {
+				bb = true;	
+			} else {
+				bb = false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally { // 실행 했건 안했건 무조건 실행 해주는것
+			close();
+		}
+		
+		return bb;
+	}
+
+
+	// 댓글추가
+	@Override
+	public void reply(String title, String content, String writer, int parentid) {
+		connect();
+		try {
+			psmt = conn.prepareStatement("INSERT into board(b_title, b_content, b_writer,b_parentid) values(?,?,?,?)");
+			psmt.setString(1,title);
+			psmt.setString(2,content);
+			psmt.setString(3,writer);
+			psmt.setInt(4,parentid);
+			int r = psmt.executeUpdate();
+			System.out.println(r + " 댓글 추가되었습니다.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+		
+	}
+	// 댓글보여주기능
+	public ArrayList<Board> replyShow(int id) {
+		ArrayList<Board> boardList = new ArrayList<>();
+		connect();
+		String sql = "select * from board where b_parentid = ?"; 
+		Board b = null;
+		try {
+			psmt = conn.prepareStatement(sql); 
+			psmt.setInt(1, id); 
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+				b = new Board(); 
+				b.setB_title(rs.getString("b_title"));
+				b.setB_content(rs.getString("b_content"));
+				b.setB_writer(rs.getString("b_writer"));
+				boardList.add(b);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally { // 실행 했건 안했건 무조건 실행 해주는것
+			close();
+		}
+		return boardList;
+		
+	}
+	
+
+	// 한건 상세조회
+	public Board findDate(int id) {
+		connect();
+		String sql = "select * from board where b_id = ?"; 
+		
+		Board b = null;
+		
+		try {
+			psmt = conn.prepareStatement(sql); 
+			psmt.setInt(1, id); 
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				b = new Board(); 
+				b.setB_title(rs.getString("b_title"));
+				b.setB_content(rs.getString("b_content"));
+				b.setB_writer(rs.getString("b_writer"));				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally { // 실행 했건 안했건 무조건 실행 해주는것
+			close();
+		}
+		return b;
+	}
+	
+	// 로그인 비교
 	public boolean rogin(String id, String pw) {
 		boolean t = false;
 		connect();
-		String sql = "SELECT *FROM rogin WHERE id = ? AND pw = ? ";
+		String sql = "SELECT *FROM member WHERE u_id = ? AND u_pass = ? ";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1,id);
@@ -84,11 +182,11 @@ public class BoardDAO implements BoardAccess{
 		
 		ArrayList<Board> boardList = new ArrayList<>();
 		connect();
-		String sql = "SELECT b_id,b_title,b_writer FROM board";
+		String sql = "SELECT * FROM board where b_parentid is null";
 		try {
 			psmt = conn.prepareStatement(sql);
 			rs = psmt.executeQuery();
-			while (rs.next()) {
+			while (rs.next()==true ) {
 				Board board = new Board();
 				board.setB_id(rs.getInt("b_id"));
 				board.setB_title(rs.getString("b_title"));
@@ -103,29 +201,6 @@ public class BoardDAO implements BoardAccess{
 		return boardList;
 	}
 
-	// 한건조회
-	public Board findDate(int id) {
-		connect();
-		String sql = "select * from board where b_id = ?"; 
-		Board b = null;
-		try {
-			psmt = conn.prepareStatement(sql); 
-			psmt.setInt(1, id); 
-			rs = psmt.executeQuery();
-			if (rs.next()) {
-				b = new Board(); 
-				b.setB_id(rs.getInt("b_id"));
-				b.setB_title(rs.getString("b_title"));
-				b.setB_content(rs.getString("b_content"));
-				b.setB_writer(rs.getString("b_writer"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally { // 실행 했건 안했건 무조건 실행 해주는것
-			close();
-		}
-		return b;
-	}
 	
 	// 연결
 	public static void connect() {
@@ -185,6 +260,8 @@ public class BoardDAO implements BoardAccess{
 		}
 		
 	}
+
+
 
 
 

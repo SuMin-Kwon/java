@@ -8,7 +8,21 @@ public class Board {
 	String b_writer;
 	String id;
 	String pw;
+	int b_parentid;
 	
+	
+	public int getB_parentid() {
+		return b_parentid;
+	}
+
+
+
+	public void setB_parentid(int b_parentid) {
+		this.b_parentid = b_parentid;
+	}
+
+
+
 	public String getId() {
 		return id;
 	}
@@ -37,6 +51,17 @@ public class Board {
 	
 	
 	
+	public Board(int b_id, String b_title, String b_content, String b_writer, int b_parentid) {
+		super();
+		this.b_id = b_id;
+		this.b_title = b_title;
+		this.b_content = b_content;
+		this.b_writer = b_writer;
+		this.b_parentid = b_parentid;
+	}
+
+
+
 	// 글 리스트 조회
 	public Board(int b_id, String b_title, String b_writer) {
 		super();
@@ -90,12 +115,16 @@ public class Board {
 	public String showInfo() {
 		return "글번호: " + b_id + ",  글제목< " + b_title + " >  ,작성자:" + b_writer ;
 	}
+	public String showFind() {
+		return "< " + b_title + " > 내용: " + b_content + " ,작성자:" + b_writer ;
+	}
 
 	@Override
 	public String toString() {
 		return "[ 글번호: " + b_id + "   글제목< " + b_title + " >  내용: " + b_content + "   작성자: " + b_writer
 				+ "]";
 	}
+
 
 	
 	
