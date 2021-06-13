@@ -39,9 +39,9 @@ public class Memo {
 	}
 	
 	public void print() {
-		System.out.println(" * "+ this.date + " * ");
+		System.out.println("───────────────"+ this.date +"───");
 		System.out.println(" < " + this.title + " >");
 		System.out.println("내용 : " + this.content);
-		System.out.println("──────────────────────────");
+		System.out.println();
 	}
 }

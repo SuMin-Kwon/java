@@ -12,7 +12,8 @@ public class BoardApp {
 
 	BoardAccess dao = new BoardDAO();
 
-	Scanner scanner = new Scanner(System.in);
+	Scanner scanner = new Scanner(System.in); // next
+	Scanner sc = new Scanner(System.in); // nextLine
 
 	static String u_id;
 	static String u_pw;
@@ -20,23 +21,33 @@ public class BoardApp {
 
 	// 상위로그인
 	public void top() {
-		String yn;
+		int yn;
 		while (true) {
-			System.out.println("로그인 하시겠습니까?(y/n)");
-			yn = scanner.next();
-			if (yn.equals("y")) {
+			System.out.println("──────── BOARD ────────");
+			System.out.println("1) 로그인     2) 회원가입 ");
+			System.out.println("───────────────────────");
+			yn = scanner.nextInt();
+			if (yn == 1) {
 				if (rogin()) {
 					start();
-				} else if (yn.equals("n")) {
-					System.out.println("시스템종료");
-					break;
+				}else {
+					System.out.println("일치하는 아이디가 없습니다.");
+					continue;
 				}
+			}
+			else if (yn == 2) {
+					System.out.println("******간편한 회원가입******");
+					System.out.println("아이디 입력:");
+					String e1 = scanner.next();
+					System.out.println("비밀번호 입력:");
+					String e2 = scanner.next();
+					dao.insertRogin(e1, e2);
+					continue;
 			} else {
-				System.out.println("정보가 일치하지 않습니다.");
+				System.out.println("잘못 입력하셨습니다.");
 				continue;
 			}
 		}
-
 	}
 
 	// 로그인 정보 비교
@@ -87,12 +98,11 @@ public class BoardApp {
 	private void findDate() {
 		System.out.print("조회할 글번호: ");
 		int id = scanner.nextInt();
-		scanner.nextLine();
 		System.out.println(dao.findDate(id).showFind());
 		// 댓글보여주는거
 		List<Board> list = dao.replyShow(id);
 		for (Board board : list) {
-			System.out.println("＞ " + board.getB_content());
+			System.out.println("  ＞＞ " + board.getB_content());
 		}
 	}
 
@@ -112,6 +122,7 @@ public class BoardApp {
 		boolean e = dao.roginTrueKey(id, u_id);
 		if (e) {
 			dao.delete(id);
+			dao.replyDelete(id); // 댓글 삭제
 		} else {
 			System.out.println("권한이 없습니다");
 			start();
@@ -159,18 +170,16 @@ public class BoardApp {
 	// 글 등록
 	private void insert() {
 		System.out.print("제목: ");
-		String b_title = scanner.next();
-		scanner.nextLine();
+		String b_title = sc.nextLine();
 		System.out.print("내용:");
 		String b_content = readMultiLine();
-		scanner.nextLine();
 		Board board = new Board(b_title, b_content, u_id);
 		dao.insert(board);
 	}
 
 	// 댓글
 	public void reply() {
-		System.out.print("댓글 추가할 글번호를 입력하세요");
+		System.out.print("댓글 추가할 글번호:");
 		int parentid = scanner.nextInt();
 		scanner.nextLine();
 		System.out.println(dao.findDate(parentid).showFind());
@@ -183,11 +192,9 @@ public class BoardApp {
 		scanner.nextLine();
 		if (num == 1) {
 			System.out.print("댓글제목:");
-			String title = scanner.next();
-			scanner.nextLine();
+			String title = sc.nextLine();
 			System.out.print("댓글:");
-			String content = scanner.next();
-			scanner.nextLine();
+			String content = sc.nextLine();
 			dao.reply(title, content, u_id, parentid);
 		} else {
 			start();

@@ -160,7 +160,7 @@ public class BoardDAO implements BoardAccess{
 	}
 
 	
-	// 삭제
+	//게시글 삭제
 	public void delete(int id) {
 		connect();
 		String sql = "DELETE FROM board WHERE b_id = ?";
@@ -169,6 +169,21 @@ public class BoardDAO implements BoardAccess{
 			psmt.setInt(1, id);
 			int r = psmt.executeUpdate();
 			System.out.println(r + "건 삭제되었습니다.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally { 
+			close();
+		}	
+	}
+	// 댓글
+	public void replyDelete(int id) {
+		connect();
+		String sql = "DELETE FROM board WHERE b_parentid = ?";
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setInt(1, id);
+			int r = psmt.executeUpdate();
+			System.out.println("댓글"+r + "건 삭제되었습니다.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally { 
@@ -259,6 +274,22 @@ public class BoardDAO implements BoardAccess{
 			close();
 		}
 		
+	}
+	
+	public void insertRogin(String id , String pw) {
+		connect();
+		try {
+			psmt = conn.prepareStatement("INSERT into member values(?,?)");
+			psmt.setString(1, id);
+			psmt.setString(2, pw);
+			int r = psmt.executeUpdate();
+			System.out.println("회원가입을 축하드립니다!("+r+"건 등록)");
+		} catch (SQLException e) {
+			System.out.println("회원가입 실패..");
+			e.printStackTrace();
+		}finally {
+			close();
+		}
 	}
 
 

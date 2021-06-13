@@ -21,13 +21,23 @@ public interface BoardAccess {
 			// 단건조회
 			public Board findDate(int id);
 
+			// 로그인 확인
 			public boolean rogin(String id, String pw);
 
+			// 댓글추가
 			public void reply(String title, String content, String writer, int parentid);
 
+			// 댓글 리스트로 보여주기
 			public ArrayList<Board> replyShow(int id);
-
+			
+			// 수정, 삭제 권한
 			public boolean roginTrueKey(int id2, String id);
+
+			//리플 삭제
+			public void replyDelete(int id);
+
+			// 로그인 회원가입
+			public void insertRogin(String e1, String e2);
 
 			
 	

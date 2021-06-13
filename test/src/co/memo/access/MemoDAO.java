@@ -119,6 +119,8 @@ public class MemoDAO implements MemoAccess {
 
 	}
 	
+	
+	//SELECT * FROM memo WHERE content LIKE '%100%';
 	// 메모내용조회
 	@Override
 	public ArrayList<Memo> FindByContent(String content) {
