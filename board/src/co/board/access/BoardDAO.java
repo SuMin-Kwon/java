@@ -19,8 +19,8 @@ public class BoardDAO implements BoardAccess{
 	static ResultSet rs;
 	static Connection conn;
 	
-	// 아이디랑 작성자값 비교
 
+	// 아이디랑 작성자값 비교
 	@Override
 	public boolean roginTrueKey(int id, String u_id) {
 		connect();
