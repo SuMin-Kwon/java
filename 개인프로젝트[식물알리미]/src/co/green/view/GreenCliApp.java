@@ -16,19 +16,55 @@ public class GreenCliApp {
 	int nums;
 
 	GreenAccess dao = new GreenDAO();
-	Scanner scanner = new Scanner(System.in); 		// int, next
-	Scanner sc = new Scanner(System.in);			// nextLine
-	
+	Scanner scanner = new Scanner(System.in); // int, next
+	Scanner sc = new Scanner(System.in); // nextLine
+
 	LocalDate localDate = LocalDate.now();
+
+	// INT 입력
+	public int readInt(String prompt) {
+		System.out.println(prompt + ">");
+		return readInt();
+	}
+
+	public int readInt() {
+		int result = 0;
+		while (true) {
+			try {
+				String temp = scanner.next();
+				result = Integer.parseInt(temp);
+				break;
+			} catch (Exception e) {
+				System.out.println("숫자 형식이 아닙니다");
+			}
+		}
+		return result;
+	}
+
+	// Str 입력
+	public String readStr(String prompt) {
+		System.out.println(prompt + ">");
+		return readStr();
+	}
 	
-	
+	public String readStr() {
+		String result = "";
+		try {
+			result = scanner.next();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+
+	}
+
 	// 상위 스타트
 	public void topStart() {
 
 		do {
 			loginView();
-			System.out.println("입력 > ");
-			nums = scanner.nextInt();
+			nums = readInt("입력");
 			login();
 
 		} while (nums != 0);
@@ -36,18 +72,15 @@ public class GreenCliApp {
 
 	// 로그인 뷰
 	public void loginView() {
-		System.out.println();
 		System.out.println("< GREEN APP >");
 		System.out.println("1) 로그인   2) 회원가입   0) 종료");
 	}
 
 	// 로그인
-	public void login() {		
+	public void login() {
 		if (nums == 1) {
-			System.out.println("id :");
-			id = scanner.next();
-			System.out.println("pw :");
-			pw = scanner.next();
+			id = readStr("[ ID ]");
+			pw = readStr("[ PW ]");
 			boolean R = dao.rogin(id, pw);
 			if (R) {
 				start();
@@ -56,19 +89,17 @@ public class GreenCliApp {
 			}
 		} else if (nums == 2) {
 			System.out.println("--------회원가입---------");
-			System.out.println("사용할 ID:");
-			id = scanner.next();
-			System.out.println("사용할 PW:");
-			pw = scanner.next();
+			id = readStr("[ 사용할 ID ]");
+			pw = readStr("[ 사용할 PW ]");
 			System.out.println("사용할 닉네임:");
 			Nname = scanner.next();
-			dao.roginInsert(id,pw,Nname);
+			dao.roginInsert(id, pw, Nname);
 		} else {
 			System.exit(1);
 		}
 
 	}
-	
+
 	// 메인메뉴
 	public void menu() {
 		System.out.println("--------------------------------------------------------------");
@@ -82,12 +113,20 @@ public class GreenCliApp {
 			menu();
 			System.out.println("입력> ");
 			nums = scanner.nextInt();
-			switch(nums) {
-			case 1 : myPlant();			break;
-			case 2 : PlantMemo();		break;
-			case 3 : selectPlant();		break;
-			case 4 : insertPlant();		break;
-			case 0 : 		
+			switch (nums) {
+			case 1:
+				myPlant();
+				break;
+			case 2:
+				PlantMemo();
+				break;
+			case 3:
+				selectPlant();
+				break;
+			case 4:
+				insertPlant();
+				break;
+			case 0:
 				System.out.println("시스템 종료");
 				System.exit(-1);
 			}
@@ -96,14 +135,14 @@ public class GreenCliApp {
 
 	private void myPlant() {
 		System.out.println("< " + localDate + " > ");
-		System.out.println("키우기 식물: " + dao.myPlant(id) );
+		System.out.println("키우기 식물: " + dao.myPlant(id));
 		// 오늘 해야할일 : 물주기, 가지치기, 병충해관리 뜨도록
-		
+
 	}
 
 	private void PlantMemo() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void selectPlant() {
@@ -111,17 +150,16 @@ public class GreenCliApp {
 		System.out.println("------식물 목록------");
 		for (Green green : list) {
 			System.out.println(green.getG_id() + ") " + green.getPlantName());
-		}System.out.println("---------------------");
+		}
+		System.out.println("---------------------");
 		System.out.println("입력 > ");
 		int selectNum = scanner.nextInt();
 		for (Green green : list) {
 			if (green.getG_id() == selectNum) {
-				dao.nameInsert(green.getPlantName(),id);
+				dao.nameInsert(green.getPlantName(), id);
 			}
 		}
 
-		
-		
 	}
 
 	private void insertPlant() {
@@ -134,12 +172,8 @@ public class GreenCliApp {
 		int plantPruning = scanner.nextInt();
 		System.out.println("식물의 병충해 주기(day): ");
 		int plantFood = scanner.nextInt();
-		dao.insert(plantName,plantWater,plantPruning,plantFood);
-				
+		dao.insert(plantName, plantWater, plantPruning, plantFood);
+
 	}
-
-
-	
-	
 
 }

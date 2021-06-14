@@ -20,7 +20,8 @@ public interface GreenAccess {
 
 	// 식물 선택
 	public void nameInsert(String plantName, String id);
-
+	
+	// 키우는 식물 추가
 	public String myPlant(String id);
 	
 }
