@@ -16,7 +16,7 @@ public interface GreenAccess {
 	public boolean rogin(String id, String pw);
 
 	// 회원가입
-	public void roginInsert(String id, String pw, String nname);
+	public void roginInsert(String id, String pw, String Nname, String jumin, String phone);
 
 	// 식물 선택
 	public void nameInsert(String plantName, String id);

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import co.green.model.Green;
+import co.green.model.GreenLogin;
 
 public class GreenDAO implements GreenAccess {
 
@@ -38,7 +39,7 @@ public class GreenDAO implements GreenAccess {
 		
 	}
 	
-	
+	// 키울 식물 등록
 	@Override
 	public void nameInsert(String plantName, String id) {
 		connect();
@@ -111,14 +112,16 @@ public class GreenDAO implements GreenAccess {
 	}
 
 	// 회원가입
-	public void roginInsert(String id, String pw, String name) {
+	public void roginInsert(String id, String pw, String name, String jumin, String phone) {
 		connect();
-		String sql = "INSERT into rogin(u_id, u_pw, u_name) values(?,?,?)";
+		String sql = "INSERT into rogin(u_id, u_pw, u_Nname, u_jumin, u_phone) values(?,?,?,?,?)";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, id);
 			psmt.setString(2, pw);
 			psmt.setString(3, name);
+			psmt.setString(4, jumin);
+			psmt.setString(5, phone);
 			int r = psmt.executeUpdate();
 			System.out.println("회원가입 " + r + "건이 등록 되었습니다!");
 		} catch (SQLException e) {
@@ -151,6 +154,32 @@ public class GreenDAO implements GreenAccess {
 		}
 
 		return R;
+	}
+	
+	// 로그인 정보
+	public ArrayList<GreenLogin> LoginList (){
+		ArrayList<GreenLogin> gl = new ArrayList<>();
+		GreenLogin grl = null;
+		connect();
+		String sql = "select * from rogin ";
+		try {
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+			while(rs.next()) {
+				grl = new GreenLogin();
+				grl.setU_id(rs.getString("u_id"));
+				grl.setU_pw(rs.getString("u_pw"));
+				grl.setU_Nname(rs.getString("u_Nname"));
+				grl.setU_jumin(rs.getString("u_jumin"));
+				grl.setU_phone(rs.getString("u_phone"));
+				gl.add(grl);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+		return gl;
 	}
 
 	// 연결
@@ -189,6 +218,8 @@ public class GreenDAO implements GreenAccess {
 			}
 		}
 	}
+
+
 
 
 
