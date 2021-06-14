@@ -202,7 +202,28 @@ public class GreenCliApp {
 	// 식물 기록, 성장 메모
 	private void plantMemo() {
 		//   + 기록 등록  >  물주기 , 가지치기, 병충해
+		System.out.println("1)오늘의 기록   2) 성장메모" );
+		nums = readInt("입력");
+		if (nums == 1) {
+			System.out.println("1) 물주기(√)  2) 가치치기(√) 3) 병충해(√)");
+			nums = readInt("입력");
+			// 물주기
+			if(nums == 1) {
+				//waterDay = localDate;
+			} 
+			// 가지치기
+			else if (nums ==2) {
+				
+			}
+			// 병충해 체크
+			else if (nums == 3) {
+				
+			}
+		}
 		// 	 + 성장 메모 
+		else if(nums == 2) {
+			
+		}
 	}
 
 	// 키울 식물 선택
