@@ -1,8 +1,10 @@
 package co.green.access;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import co.green.model.Green;
+import co.green.model.GreenLogin;
 
 public interface GreenAccess {
 
@@ -23,5 +25,27 @@ public interface GreenAccess {
 	
 	// 키우는 식물 추가
 	public String myPlant(String id);
+
+	// 날짜 초기화
+	public void insertDate(String a, int selectNum);
+
+	// 물 주는 날짜 가져오기
+	public String wDate(String nname);
+	// 물 주는 날짜 초기화
+	public void insertDate(String a, String plantName);
+
+	// 가지치기 날짜 가져오기
+	public String pDate(String plantName);
+	// 가지치기 날짜 초기화
+	public void insertPdate(String nowDay, String plantName);
+
+	// 영양제 날짜 가져오기
+	public String fDate(String plantName);
+	// 영양제 날짜 초기화
+	public void insertFdate(String nowDay, String plantName);
+
+	// 마이페이지 목록
+	public GreenLogin myPage(String id);
+
 	
 }

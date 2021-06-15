@@ -9,6 +9,17 @@ public class GreenLogin {
 	String u_phone;
 	String u_plant;
 	
+	public GreenLogin () {}
+	
+	public GreenLogin(String u_id, String u_pw, String u_Nname, String u_jumin, String u_phone, String u_plant) {
+		super();
+		this.u_id = u_id;
+		this.u_pw = u_pw;
+		this.u_Nname = u_Nname;
+		this.u_jumin = u_jumin;
+		this.u_phone = u_phone;
+		this.u_plant = u_plant;
+	}
 	
 	public String getU_id() {
 		return u_id;

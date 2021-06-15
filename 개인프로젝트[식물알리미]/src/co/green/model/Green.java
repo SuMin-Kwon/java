@@ -7,8 +7,15 @@ public class Green {
 	int plantWater;
 	int plantPruning;
 	int plantFood;
+	String g_date;
 	
 	
+	public String getG_date() {
+		return g_date;
+	}
+	public void setG_date(String g_date) {
+		this.g_date = g_date;
+	}
 	public int getG_id() {
 		return g_id;
 	}
@@ -42,7 +49,7 @@ public class Green {
 	@Override
 	public String toString() {
 		return "Green [  " + g_id + ")  식물이름 : " + plantName + ", 물 주기: " + plantWater + ", 가지치기 주기 : "
-				+ plantPruning + ", 병충해 주기 : " + plantFood + "  ]";
+				+ plantPruning + ", 영양제 주기 : " + plantFood + "  ]";
 	}
 	
 

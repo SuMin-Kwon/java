@@ -49,7 +49,7 @@ class MyAuthentication extends Authenticator {
     PasswordAuthentication account;
  
     public MyAuthentication(){
-        String id = "rnjstnals120";
+        String id = "";
         String pw = "";
         account = new PasswordAuthentication(id, pw);
     }

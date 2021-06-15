@@ -14,8 +14,8 @@ import javax.mail.internet.MimeMessage;
 public class NaverMail {
 	public static void main(String[] args) {		
 		String host = "smtp.naver.com";
-		String user = "rnjstnals120";
-		String password = "[kwon5582]";
+		String user = "";
+		String password = "";
 		
 		Properties props = new Properties();
 		props.put("mail.smtp.host", host);
