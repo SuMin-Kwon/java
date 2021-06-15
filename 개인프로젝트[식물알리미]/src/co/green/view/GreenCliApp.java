@@ -8,8 +8,10 @@ import java.util.Scanner;
 
 import co.green.access.GreenAccess;
 import co.green.access.GreenDAO;
+import co.green.model.Board;
 import co.green.model.Green;
 import co.green.model.GreenLogin;
+import co.green.model.GreenMemo;
 
 public class GreenCliApp {
 
@@ -83,7 +85,7 @@ public class GreenCliApp {
 			loginNums();
 		} else if (nums == 4) {
 			System.out.println("━━━━━━━━━━━━━━  비밀번호 찾기  ━━━━━━━━━━━━━━");
-			id = readStr( " ID ");
+			id = readStr(" ID ");
 			jumin = readStr(" 생년월일 , ex) 19990101");
 			phone = readStr(" 휴대폰번호 , ex) 01012345678");
 			ArrayList<GreenLogin> gl = ((GreenDAO) dao).LoginList();
@@ -149,7 +151,7 @@ public class GreenCliApp {
 				selectPlant();
 				break;
 			case 4:
-				insertPlant();
+				plantBoard();
 				break;
 			case 5:
 				plantBoard();
@@ -176,12 +178,13 @@ public class GreenCliApp {
 		System.out.println("┌───────  개인정보  ───────┐");
 		System.out.println();
 		System.out.println("  아이디 > " + gl.getU_id());
-		String pwpw = gl.getU_pw().substring(0,2);
+		String pwpw = gl.getU_pw().substring(0, 2);
 		String pwpw2 = gl.getU_pw().substring(2);
 		System.out.print("  비밀번호 > " + pwpw);
-		for (int i=0; i < pwpw2.length(); i++ ) {
+		for (int i = 0; i < pwpw2.length(); i++) {
 			System.out.print("*");
-		}System.out.println();
+		}
+		System.out.println();
 		System.out.println("  전화번호 > " + gl.getU_phone());
 		System.out.println("  닉네임 > " + gl.getU_Nname());
 		System.out.println("  키우는 식물 > " + gl.getU_plant());
@@ -191,15 +194,27 @@ public class GreenCliApp {
 		System.out.println("1) 비밀번호 수정   2) 닉네임 수정   3) 식물 수정   4) 이전으로");
 		nums = readInt("입력");
 		if (nums == 1) {
-			
-		}else if (nums == 2) {
-			
-		}else if (nums == 3) {
-			
-		}else if (nums == 4) {
+			String b_pw = readStr(" PW 다시 입력해주세요 ");
+			if (b_pw.equals(b_pw)) {
+				b_pw = readStr("변경할 비밀번호");
+				dao.chagePw(b_pw, id);
+			} else {
+				System.out.println("비밀번호가 일치하지 않습니다!");
+				myPage();
+			}
+
+		} else if (nums == 2) {
+			String b_name = readStr("변경할 닉네임");
+			dao.chageNname(b_name, id);
+			myPage();
+		} else if (nums == 3) {
+			selectPlant();
+			myPage();
+
+		} else if (nums == 4) {
 			start();
 		}
-		
+
 	}
 
 	// 로그인시 메인 화면 출력
@@ -217,11 +232,12 @@ public class GreenCliApp {
 		}
 		// 닉네임
 		System.out.println(Nname + "님, 오늘도 식물키우기 도전! ");
+		// 키운 날짜 표시
 
 		// 현재키우는 식물
 		plantName = dao.myPlant(id);
 		System.out.println("현재 키우는 식물: " + plantName);
-		
+
 		// 오늘 해야할일 : 물주기, 가지치기, 영양제체크 뜨도록
 		System.out.print("오늘의 할일 : ");
 		if (!plantName.equals("없음")) {
@@ -229,11 +245,12 @@ public class GreenCliApp {
 			pruningDay();
 			foodDay();
 			// 조건 : 물,가지치기,영양제날이 모두 아닐때는 할일이 없음!
-			if(!(waterDay.isEqual(localDate)) && 
-			   !(pruningDay.isEqual(localDate)) && 
-			   !(plantFoodDay.isEqual(localDate))) {
+			if (!(waterDay.isEqual(localDate)) && !(pruningDay.isEqual(localDate))
+					&& !(plantFoodDay.isEqual(localDate))) {
 				System.out.print("없음");
-			}	
+			}
+		} else {
+			System.out.println("없음");
 		}
 		System.out.println();
 	}
@@ -241,7 +258,7 @@ public class GreenCliApp {
 	// 물 주는 날!
 	public void waterDay() {
 		// 날짜 받아오기(선택한 날)
-		String a = dao.wDate(plantName);
+		String a = dao.wDate(id);
 		// 스트링을 DATE로 변환
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
 		date = LocalDate.parse(a, formatter);
@@ -255,15 +272,15 @@ public class GreenCliApp {
 		waterDay = date.plusDays(plantWater);
 		if (waterDay.isEqual(localDate)) {
 			System.out.print(" [ 물 주는 날 ] ");
-		} else if(waterDay.isBefore(localDate)) {
-			dao.insertDate(nowDay, plantName);
-		} 
+		} else if (waterDay.isBefore(localDate)) {
+			dao.insertDate(nowDay, id);
+		}
 	}
-	
+
 	// 가지치기 하는 날!
 	public void pruningDay() {
 		// 날짜 받아오기(선택한 날)
-		String a = dao.pDate(plantName);
+		String a = dao.pDate(id);
 		// 스트링을 DATE로 변환
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
 		date = LocalDate.parse(a, formatter);
@@ -275,40 +292,40 @@ public class GreenCliApp {
 			}
 		}
 		pruningDay = date.plusDays(plantPruning);
-		
+
 		if (pruningDay.isEqual(localDate)) {
 			System.out.print(" [ 가지치는 날 ] ");
-		} else if(pruningDay.isBefore(localDate)) {
-			dao.insertPdate(nowDay, plantName);
+		} else if (pruningDay.isBefore(localDate)) {
+			dao.insertPdate(nowDay, id);
 		}
 	}
-	
+
 	// 영양제 주는 날!
 	public void foodDay() {
-			// 날짜 받아오기(선택한 날)
-			String a = dao.fDate(plantName);
-			// 스트링을 DATE로 변환
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
-			date = LocalDate.parse(a, formatter);
+		// 날짜 받아오기(선택한 날)
+		String a = dao.fDate(id);
+		// 스트링을 DATE로 변환
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
+		date = LocalDate.parse(a, formatter);
 
-			ArrayList<Green> list = dao.listAll();
-			for (Green green : list) {
-				if (green.getPlantName().equals(plantName)) {
-					plantFood = green.getPlantFood();
-				}
-			}
-			plantFoodDay = date.plusDays(plantFood);
-			
-			if (plantFoodDay.isEqual(localDate)) {
-				System.out.print(" [ 영양제 주는 날 ] ");
-			} else if(plantFoodDay.isBefore(localDate)) {
-				dao.insertFdate(nowDay, plantName);
+		ArrayList<Green> list = dao.listAll();
+		for (Green green : list) {
+			if (green.getPlantName().equals(plantName)) {
+				plantFood = green.getPlantFood();
 			}
 		}
+		plantFoodDay = date.plusDays(plantFood);
+
+		if (plantFoodDay.isEqual(localDate)) {
+			System.out.print(" [ 영양제 주는 날 ] ");
+		} else if (plantFoodDay.isBefore(localDate)) {
+			dao.insertFdate(nowDay, id);
+		}
+	}
 
 	// 식물 기록, 성장 메모
 	private void plantMemo() {
-		System.out.println("1)오늘의 기록   2) 성장 메모");
+		System.out.println("1) 오늘의 기록   2) 간단 메모   3) 이전으로 ");
 		nums = readInt("입력");
 		if (nums == 1) {
 			System.out.println("1) 물주기(√)   2) 가치치기(√)   3) 영양제 체크(√)");
@@ -316,23 +333,88 @@ public class GreenCliApp {
 			// 물주기
 			if (nums == 1) {
 				System.out.println("물주기 성공!");
-				dao.insertDate(nowDay, plantName);
+				dao.insertDate(nowDay, id);
 			}
 			// 가지치기
 			else if (nums == 2) {
 				System.out.println("가지치기 성공!");
-				dao.insertPdate(nowDay, plantName);
+				dao.insertPdate(nowDay, id);
 			}
 			// 영양제 체크
 			else if (nums == 3) {
 				System.out.println("영양제주기 성공!");
-				dao.insertFdate(nowDay, plantName);
+				dao.insertFdate(nowDay, id);
 			}
 		}
 		// + 성장 메모
 		else if (nums == 2) {
-
+			memo();
+		} else if (nums == 3) {
+			start();
 		}
+	}
+
+	// 성장메모
+	public void memo() {
+		while (true) {
+			System.out.println("1) 메모등록   2) 메모삭제   3) 메모전체조회   4) 메모검색   5) 메인메뉴로 ");
+			nums = readInt("입력");
+			switch (nums) {
+			case 1:
+				inserMemo();
+				break;
+			case 2:
+				deleteMemo();
+				break;
+			case 3:
+				memoList();
+				break;
+			case 4:
+				findMemo();
+				break;
+			case 5:
+				start();
+				break;
+			}
+		}
+	}
+
+	// 메모찾기
+	private void findMemo() {
+		String find = readStr("찾을 단어");
+		ArrayList<GreenMemo> gmList = dao.memoList(id);
+		for (GreenMemo gm : gmList) {
+			if (gm.getContent().contains(find)) {
+				System.out.println(gm.memoPrint());
+			} else if (gm.getTitle().contains(find)) {
+				System.out.println(gm.memoPrint());
+			}
+		}
+	}
+
+	// 메모전체조회
+	private void memoList() {
+		ArrayList<GreenMemo> gmList = dao.memoList(id);
+		for (GreenMemo gm : gmList) {
+			System.out.println(gm.memoPrint());
+		}
+	}
+
+	// 메모삭제
+	private void deleteMemo() {
+		String date = readStr("삭제할 메모 날짜 (ex)2021-01-01");
+		System.out.println("삭제할 메모 제목");
+		String title = sc.nextLine();
+		dao.deleteMemo(id, date, title);
+	}
+
+	// 메모등록
+	private void inserMemo() {
+		System.out.println("제목");
+		String title = sc.nextLine();
+		System.out.println("내용");
+		String content = sc.nextLine();
+		dao.inserMemo(id, nowDay, title, content);
 	}
 
 	// 키울 식물 선택
@@ -347,7 +429,7 @@ public class GreenCliApp {
 		for (Green green : list) {
 			if (green.getG_id() == selectNum) {
 				dao.nameInsert(green.getPlantName(), id);
-				dao.insertDate(nowDay, selectNum);
+				dao.changeDate(nowDay, id);
 
 			}
 		}
@@ -357,19 +439,108 @@ public class GreenCliApp {
 	// 식물등록
 	private void insertPlant() {
 		System.out.println("< 새로운 식물 등록! >");
-		System.out.println("등록할 식물 이름: ");
+		System.out.println("등록할 식물 이름 >");
 		String plantName = sc.nextLine();
-		int plantWater = readInt("식물의 물 주기(day):");
-		int plantPruning = readInt("식물의 가지치기 주기(day):");
-		int plantFood = readInt("식물의 병충해 주기(day):");
+		int plantWater = readInt("식물의 물 주기(day)");
+		int plantPruning = readInt("식물의 가지치기 주기(day)");
+		int plantFood = readInt("식물의 영양제 주기(day)");
 		dao.insert(plantName, plantWater, plantPruning, plantFood);
 
 	}
 
+	// 식물도감
+	private void plantInfo() {
+		ArrayList<Green> list = dao.listAll();
+		for (Green gr : list) {
+			System.out.println(gr.toString());
+		}
+	}
+
 	// 식물 정보 게시판
 	private void plantBoard() {
-		// 1) 정보 게시판 2) 정보 검색 3) 식물키움정보
-		// 단어 검색시 정보검색
+		while (true) {
+			System.out.println("1) 식물도감   2) 새로운 식물 등록   3) 정보 공유   4) 메인메뉴로 ");
+			nums = readInt("입력");
+			switch (nums) {
+			case 1:
+				plantInfo();
+				break;
+			case 2:
+				insertPlant();
+				break;
+			case 3:
+				infoBoard();
+				break;
+			case 4:
+				start();
+				break;
+			}
+		}
+	}
+
+	private void infoBoard() {
+		while (true) {
+			System.out.println("1) 정보게시판   2) 게시글 등록   3) 게시글 삭제   4) 댓글 추가   5) 단어검색   6) 메인메뉴로");
+			nums = readInt("입력");
+			switch (nums) {
+			case 1:
+				allBoard();
+				break;
+			case 2:
+				boardInsert();
+				break;
+			case 3:
+				boardDelete();
+				break;
+			case 4:
+				reply();
+				break;
+			case 5:
+				findBoard();
+				break;
+			case 6:
+				start();
+				break;
+			}
+		}
+	}
+
+	// 정보게시판
+	private void allBoard() {
+		ArrayList<Board> list = dao.allBoard();
+		for (Board board : list) {
+			System.out.println(board.showInfo());
+		}
+	}
+
+	// 게시글등록
+	private void boardInsert() {
+		System.out.println("제목: ");
+		String b_title = sc.nextLine();
+		System.out.println("내용 (이용방법) 글 작성완료 후 한칸 띄우고 .end 작성 후 ENTER! ");
+		String b_content = readMultiLine();
+		dao.insert(b_title, b_content, id);
+	}
+
+	// 게시글 삭제
+	private void boardDelete() {
+		int b_id = readInt("삭제할 글번호 입력");
+		boolean e = dao.roginTrueKey(b_id, id);
+		if (e) {
+			dao.delete(b_id);
+			dao.replyDelete(b_id); // 댓글 삭제
+		} else {
+			System.out.println("권한이 없습니다");
+		}
+	}
+
+	// 댓글추가
+	private void reply() {
+
+	}
+
+	// 단어검색
+	private void findBoard() {
 
 	}
 
@@ -411,4 +582,21 @@ public class GreenCliApp {
 
 	}
 
+	// 길게 작성
+	public String readMultiLine() {
+		StringBuffer result = new StringBuffer();
+		try {
+			String a = "";
+			while (true) {
+				a = scanner.next();
+				if (a == null || a.trim().equals(".end")) {
+					break;
+				}
+				result.append(a).append(" ");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result.toString();
+	}
 }
