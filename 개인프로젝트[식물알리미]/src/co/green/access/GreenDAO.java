@@ -6,9 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import co.green.model.Board;
 import co.green.model.Green;
+import co.green.model.GreenGrow;
 import co.green.model.GreenLogin;
 import co.green.model.GreenMemo;
 
@@ -19,26 +21,26 @@ public class GreenDAO implements GreenAccess {
 	static Connection conn;
 
 	// 닉네임 출력
-	public String myPlant(String id) {
-		String plantName = "없음";
+	public ArrayList<GreenGrow> myPlant(String id) {
+		ArrayList<GreenGrow> ggList = new ArrayList<>();
+		GreenGrow gg = null;
 		connect();
-		String sql = "SELECT u_plant from rogin WHERE u_id =?";
+		String sql = "SELECT u_plant from greenGrow WHERE u_id =?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, id);
 			rs = psmt.executeQuery();
 			while (rs.next()) {
-				plantName = rs.getString("u_plant");
-			}
-			if (plantName == null) {
-				plantName = "없음";
+				gg = new GreenGrow();
+				gg.setU_plant(rs.getString("u_plant"));
+				ggList.add(gg);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close();
 		}
-		return plantName;
+		return ggList;
 
 	}
 
@@ -81,22 +83,7 @@ public class GreenDAO implements GreenAccess {
 		}
 	}
 
-	// 게시글 삭제
-	@Override
-	public void delete(int id) {
-		connect();
-		String sql = "DELETE FROM board WHERE b_id = ?";
-		try {
-			psmt = conn.prepareStatement(sql);
-			psmt.setInt(1, id);
-			int r = psmt.executeUpdate();
-			System.out.println(r + "건 삭제되었습니다.");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			close();
-		}
-	}
+	
 
 	// 식물 리스트
 	@Override
@@ -140,7 +127,6 @@ public class GreenDAO implements GreenAccess {
 				gl.setU_pw(rs.getString("u_pw"));
 				gl.setU_phone(rs.getString("u_phone"));
 				gl.setU_Nname(rs.getString("u_Nname"));
-				gl.setU_plant(rs.getString("u_plant"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -195,6 +181,33 @@ public class GreenDAO implements GreenAccess {
 		return R;
 	}
 
+	// 키우는 정보
+	public ArrayList<GreenGrow> GrowList(){
+		ArrayList<GreenGrow> ggList = new ArrayList<>();
+		GreenGrow gg = null;
+		connect();
+		String sql = "select * from greenGrow ";
+		try {
+			psmt = conn.prepareStatement(sql);
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+				gg = new GreenGrow();
+				gg.setU_id(rs.getString("u_id"));
+				gg.setU_plant(rs.getString("u_plant"));
+				gg.setG_date(rs.getString("g_date"));
+				gg.setG_Pdate(rs.getString("g_Pdate"));
+				gg.setG_Fdate(rs.getString("g_Fdate"));
+				gg.setGrowDate(rs.getString("growDate"));
+				ggList.add(gg);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return ggList;
+	}
+	
 	// 로그인 정보
 	public ArrayList<GreenLogin> LoginList() {
 		ArrayList<GreenLogin> gl = new ArrayList<>();
@@ -258,7 +271,24 @@ public class GreenDAO implements GreenAccess {
 		}
 
 	}
-
+	// 키우는 식물 삭제
+	public void plantDelete(String id, String u_plant) {
+		connect();
+		String sql = "DELETE FROM greenGrow WHERE u_id = ? and u_plant = ?";
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, id);
+			psmt.setString(2, u_plant);
+			int r = psmt.executeUpdate();
+			System.out.println("식물이 " + r + "건 삭제되었습니다.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	}
+	
+	
 	// 연결
 	public static void connect() {
 
@@ -298,16 +328,17 @@ public class GreenDAO implements GreenAccess {
 
 	// 식물 선택시 현재날짜로 초기화
 	@Override
-	public void changeDate(String a, String id) {
+	public void changeDate(String a, String id, String name) {
 		connect();
-		String sql = "UPDATE rogin set g_date = ?,g_Pdate  = ?, g_Fdate = ?, growDate= ? WHERE u_id= ?";
+		String sql = "INSERT into greenGrow values(?,?,?,?,?,?)";
 		try {
 			psmt = conn.prepareStatement(sql);
-			psmt.setString(1, a);
-			psmt.setString(2, a);
+			psmt.setString(1, id);
+			psmt.setString(2, name);
 			psmt.setString(3, a);
 			psmt.setString(4, a);
-			psmt.setString(5, id);
+			psmt.setString(5, a);
+			psmt.setString(6, a);
 			int r = psmt.executeUpdate();
 			System.out.println("오늘부터 키우기 " + r + "일!");
 		} catch (SQLException e) {
@@ -321,7 +352,7 @@ public class GreenDAO implements GreenAccess {
 	// 물 주는 날짜 업데이트
 	public void insertDate(String a, String id) {
 		connect();
-		String sql = "UPDATE rogin set g_date = ? WHERE u_id= ?";
+		String sql = "UPDATE greenGrow set g_date = ? WHERE u_id= ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, a);
@@ -340,7 +371,7 @@ public class GreenDAO implements GreenAccess {
 	public String wDate(String id) {
 		String wDate = "";
 		connect();
-		String sql = "SELECT g_date from rogin WHERE u_id = ?";
+		String sql = "SELECT g_date from greenGrow WHERE u_id = ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, id);
@@ -361,7 +392,7 @@ public class GreenDAO implements GreenAccess {
 	public String pDate(String id) {
 		String pDate = "";
 		connect();
-		String sql = "SELECT g_Pdate from rogin WHERE u_id = ?";
+		String sql = "SELECT g_Pdate from greenGrow WHERE u_id = ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, id);
@@ -381,7 +412,7 @@ public class GreenDAO implements GreenAccess {
 	@Override
 	public void insertPdate(String nowDay, String id) {
 		connect();
-		String sql = "UPDATE rogin set g_Pdate = ? WHERE u_id= ?";
+		String sql = "UPDATE greenGrow set g_Pdate = ? WHERE u_id= ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, nowDay);
@@ -400,7 +431,7 @@ public class GreenDAO implements GreenAccess {
 	public String fDate(String id) {
 		String fDate = "";
 		connect();
-		String sql = "SELECT g_Fdate from rogin WHERE u_id = ?";
+		String sql = "SELECT g_Fdate from greenGrow WHERE u_id = ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, id);
@@ -420,7 +451,7 @@ public class GreenDAO implements GreenAccess {
 	@Override
 	public void insertFdate(String nowDay, String id) {
 		connect();
-		String sql = "UPDATE rogin set g_Fdate = ? WHERE u_id= ?";
+		String sql = "UPDATE greenGrow set g_Fdate = ? WHERE u_id= ?";
 		try {
 			psmt = conn.prepareStatement(sql);
 			psmt.setString(1, nowDay);
@@ -519,6 +550,26 @@ public class GreenDAO implements GreenAccess {
 
 	}
 
+	// 댓글추가
+	@Override
+	public void reply(String title, String content, String writer, int parentid) {
+		connect();
+		try {
+			psmt = conn.prepareStatement("INSERT into board(b_title, b_content, b_writer,b_parentid) values(?,?,?,?)");
+			psmt.setString(1,title);
+			psmt.setString(2,content);
+			psmt.setString(3,writer);
+			psmt.setInt(4,parentid);
+			int r = psmt.executeUpdate();
+			System.out.println(r + " 댓글 추가되었습니다.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+		
+	}
+	
 	// 아이디랑 작성자값 비교
 	@Override
 	public boolean roginTrueKey(int id, String u_id) {
@@ -543,8 +594,25 @@ public class GreenDAO implements GreenAccess {
 
 		return bb;
 	}
+	
+	// 게시글 삭제
+		@Override
+	public void delete(int id) {
+			connect();
+			String sql = "DELETE FROM board WHERE b_id = ?";
+			try {
+				psmt = conn.prepareStatement(sql);
+				psmt.setInt(1, id);
+				int r = psmt.executeUpdate();
+				System.out.println(r + "건 삭제되었습니다.");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				close();
+			}
+		}
 
-	// 댓글
+	// 댓글삭제
 	public void replyDelete(int id) {
 		connect();
 		String sql = "DELETE FROM board WHERE b_parentid = ?";
@@ -573,12 +641,64 @@ public class GreenDAO implements GreenAccess {
 				Board board = new Board();
 				board.setB_id(rs.getInt("b_id"));
 				board.setB_title(rs.getString("b_title"));
+				board.setB_content(rs.getString("b_content"));
 				board.setB_writer(rs.getString("b_writer"));
 				boardList.add(board);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			close();
+		}
+		return boardList;
+	}
+	
+	// 상세보기
+
+	@Override
+	public Board findDate(int nums) {
+		connect();
+		String sql = "select * from board where b_id = ?"; 
+		Board b = null;
+		try {
+			psmt = conn.prepareStatement(sql); 
+			psmt.setInt(1, nums); 
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				b = new Board(); 
+				b.setB_title(rs.getString("b_title"));
+				b.setB_content(rs.getString("b_content"));
+				b.setB_writer(rs.getString("b_writer"));				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally { 
+			close();
+		}
+		return b;
+	}
+
+	// 댓글 보여주기
+	@Override
+	public List<Board> replyShow(int nums) {
+		ArrayList<Board> boardList = new ArrayList<>();
+		connect();
+		String sql = "select * from board where b_parentid = ?"; 
+		Board b = null;
+		try {
+			psmt = conn.prepareStatement(sql); 
+			psmt.setInt(1, nums); 
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+				b = new Board(); 
+				b.setB_title(rs.getString("b_title"));
+				b.setB_content(rs.getString("b_content"));
+				b.setB_writer(rs.getString("b_writer"));
+				boardList.add(b);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally { 
 			close();
 		}
 		return boardList;

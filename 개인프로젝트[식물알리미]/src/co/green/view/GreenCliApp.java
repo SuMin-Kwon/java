@@ -3,13 +3,17 @@ package co.green.view;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Scanner;
 
 import co.green.access.GreenAccess;
 import co.green.access.GreenDAO;
 import co.green.model.Board;
 import co.green.model.Green;
+import co.green.model.GreenGrow;
 import co.green.model.GreenLogin;
 import co.green.model.GreenMemo;
 
@@ -23,7 +27,7 @@ public class GreenCliApp {
 	String phone;
 	int nums;
 
-	String plantName; // 식물이름
+	String plantName = null; // 식물이름
 	LocalDate date; // 날짜
 
 	// 물주기, 가지치기, 영양제
@@ -44,6 +48,9 @@ public class GreenCliApp {
 
 	// 현재날짜 스트링
 	String nowDay = String.format("%1$tY-%1$tm-%1$td", localDate);
+
+	// 키우기 시작한 날짜
+	String growdate;
 
 	// 상위 스타트
 	public void topStart() {
@@ -110,6 +117,13 @@ public class GreenCliApp {
 	public void member() {
 		System.out.println("--------회원가입---------");
 		id = readStr("[ 사용할 ID ]");
+		ArrayList<GreenLogin> gl = ((GreenDAO) dao).LoginList();
+		for (GreenLogin green : gl) {
+			if (green.getU_id().equals(id)) {
+				System.out.println("이미 존재하는 아이디입니다.");
+				member();
+			}
+		}
 		pw = readStr("[ 사용할 PW ]");
 		System.out.println("[ 사용할 닉네임 ]");
 		Nname = sc.nextLine();
@@ -187,11 +201,19 @@ public class GreenCliApp {
 		System.out.println();
 		System.out.println("  전화번호 > " + gl.getU_phone());
 		System.out.println("  닉네임 > " + gl.getU_Nname());
-		System.out.println("  키우는 식물 > " + gl.getU_plant());
+		System.out.print("  키우는 식물 > ");
+		ArrayList<GreenGrow> name = dao.myPlant(id);
+		for (GreenGrow gg : name) {
+			plantName = gg.getU_plant();
+			System.out.print(plantName + " ");
+		}
+		if (plantName == null) {
+			System.out.println("없음");
+		}
 		System.out.println();
 		System.out.println("└────────────────────────┘");
 		System.out.println();
-		System.out.println("1) 비밀번호 수정   2) 닉네임 수정   3) 식물 수정   4) 이전으로");
+		System.out.println("1) 비밀번호 수정   2) 닉네임 수정   3) 식물 수정   4) 키우는 식물 삭제   5) 이전으로");
 		nums = readInt("입력");
 		if (nums == 1) {
 			String b_pw = readStr(" PW 다시 입력해주세요 ");
@@ -212,9 +234,24 @@ public class GreenCliApp {
 			myPage();
 
 		} else if (nums == 4) {
+			System.out.println("삭제할 식물 이름");
+			String yn = sc.nextLine();
+			dao.plantDelete(id, yn);
+		} else if (nums == 5) {
 			start();
 		}
 
+	}
+
+	// 랜덤 문자열 뽑기
+	public String getRandTestString() {
+
+		String RandomNames[] = { "오늘도 식물키우기 도전!", "안녕하세요?", "기분 좋은 하루네요", "시작은 누구나 어렵습니다! 힘내세요~", "오늘은 얼마나 자랐나요?",
+				"키우는 재미를 느껴보세요!", "작은정원을 만들어보세요~", "해야할 일은 항상 꼼꼼히 체크!" };
+
+		Random oRandom = new Random();
+		int randNum = oRandom.nextInt(RandomNames.length);
+		return RandomNames[randNum];
 	}
 
 	// 로그인시 메인 화면 출력
@@ -230,29 +267,65 @@ public class GreenCliApp {
 				Nname = green.getU_Nname();
 			}
 		}
-		// 닉네임
-		System.out.println(Nname + "님, 오늘도 식물키우기 도전! ");
-		// 키운 날짜 표시
-
+		// 닉네임 + 랜덤문구
+		System.out.println(Nname + "님, " + getRandTestString());
 		// 현재키우는 식물
-		plantName = dao.myPlant(id);
-		System.out.println("현재 키우는 식물: " + plantName);
 
-		// 오늘 해야할일 : 물주기, 가지치기, 영양제체크 뜨도록
-		System.out.print("오늘의 할일 : ");
-		if (!plantName.equals("없음")) {
-			waterDay();
-			pruningDay();
-			foodDay();
-			// 조건 : 물,가지치기,영양제날이 모두 아닐때는 할일이 없음!
-			if (!(waterDay.isEqual(localDate)) && !(pruningDay.isEqual(localDate))
-					&& !(plantFoodDay.isEqual(localDate))) {
-				System.out.print("없음");
+		System.out.println("현재 키우는 식물: ");
+		ArrayList<GreenGrow> name = dao.myPlant(id);
+		for (GreenGrow gg : name) {
+			plantName = gg.getU_plant();
+			System.out.println(plantName);
+			if (!(plantName == null)) {
+				growDate();
 			}
-		} else {
+		}
+		if (plantName == null) {
 			System.out.println("없음");
 		}
 		System.out.println();
+		// 오늘 해야할일 : 물주기, 가지치기, 영양제체크 뜨도록
+		System.out.print("오늘의 할일 : ");
+		ArrayList<GreenGrow> name1 = dao.myPlant(id);
+		for (GreenGrow gg : name1) {
+			plantName = gg.getU_plant();
+			if (!(plantName == null)) {
+				waterDay();
+				pruningDay();
+				foodDay();
+			}
+		}
+//		 조건 : 물,가지치기,영양제날이 모두 아닐때는 할일이 없음!
+		if (plantName == null) {
+			System.out.println("없음");
+		}
+		else if ( !(waterDay.isEqual(localDate)) && !(pruningDay.isEqual(localDate)) &&
+				!(plantFoodDay.isEqual(localDate)) ) {
+			System.out.println("없음");
+		}
+		System.out.println();
+	}
+
+	// 키운 날짜 체크
+	public void growDate() {
+
+		ArrayList<GreenGrow> gg = dao.GrowList();
+		for (GreenGrow green : gg) {
+			if (green.getU_id().equals(id)) {
+				growdate = green.getGrowDate();
+			}
+		}
+		Calendar bDate = Calendar.getInstance();
+		Calendar nDate = Calendar.getInstance();
+
+		int year = Integer.parseInt(growdate.substring(0, 4));
+		int month = (Integer.parseInt(growdate.substring(5, 7))) - 1;
+		int day = Integer.parseInt(growdate.substring(8));
+
+		long days = 0;
+		bDate.set(year, month, day);
+		days = (nDate.getTimeInMillis() - bDate.getTimeInMillis()) / (24 * 60 * 60 * 1000);
+		System.out.println(" ♣ 식물 키우기 " + (days + 1) + "일째");
 	}
 
 	// 물 주는 날!
@@ -271,7 +344,7 @@ public class GreenCliApp {
 		}
 		waterDay = date.plusDays(plantWater);
 		if (waterDay.isEqual(localDate)) {
-			System.out.print(" [ 물 주는 날 ] ");
+			System.out.print("[" + plantName + " 물 주는 날 ] ");
 		} else if (waterDay.isBefore(localDate)) {
 			dao.insertDate(nowDay, id);
 		}
@@ -294,7 +367,7 @@ public class GreenCliApp {
 		pruningDay = date.plusDays(plantPruning);
 
 		if (pruningDay.isEqual(localDate)) {
-			System.out.print(" [ 가지치는 날 ] ");
+			System.out.print("[" + plantName + " 가지치는 날 ] ");
 		} else if (pruningDay.isBefore(localDate)) {
 			dao.insertPdate(nowDay, id);
 		}
@@ -317,7 +390,7 @@ public class GreenCliApp {
 		plantFoodDay = date.plusDays(plantFood);
 
 		if (plantFoodDay.isEqual(localDate)) {
-			System.out.print(" [ 영양제 주는 날 ] ");
+			System.out.print("[" + plantName + " 영양제 주는 날 ] ");
 		} else if (plantFoodDay.isBefore(localDate)) {
 			dao.insertFdate(nowDay, id);
 		}
@@ -420,16 +493,16 @@ public class GreenCliApp {
 	// 키울 식물 선택
 	private void selectPlant() {
 		ArrayList<Green> list = dao.listAll();
-		System.out.println("------식물 목록------");
+		System.out.println("━━━━━━━ 키울 식물 목록 ━━━━━━━");
 		for (Green green : list) {
 			System.out.println(green.getG_id() + ") " + green.getPlantName());
 		}
-		System.out.println("---------------------");
+		System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 		int selectNum = readInt("입력");
 		for (Green green : list) {
 			if (green.getG_id() == selectNum) {
-				dao.nameInsert(green.getPlantName(), id);
-				dao.changeDate(nowDay, id);
+//				dao.nameInsert(green.getPlantName(), id);
+				dao.changeDate(nowDay, id, green.getPlantName());
 
 			}
 		}
@@ -452,7 +525,7 @@ public class GreenCliApp {
 	private void plantInfo() {
 		ArrayList<Green> list = dao.listAll();
 		for (Green gr : list) {
-			System.out.println(gr.toString());
+			gr.print();
 		}
 	}
 
@@ -478,9 +551,10 @@ public class GreenCliApp {
 		}
 	}
 
+	// 게시판 메뉴
 	private void infoBoard() {
 		while (true) {
-			System.out.println("1) 정보게시판   2) 게시글 등록   3) 게시글 삭제   4) 댓글 추가   5) 단어검색   6) 메인메뉴로");
+			System.out.println("1) 정보 게시판   2) 게시글 등록   3) 게시글 삭제   4) 메인메뉴로");
 			nums = readInt("입력");
 			switch (nums) {
 			case 1:
@@ -493,23 +567,69 @@ public class GreenCliApp {
 				boardDelete();
 				break;
 			case 4:
-				reply();
-				break;
-			case 5:
-				findBoard();
-				break;
-			case 6:
 				start();
 				break;
 			}
 		}
 	}
 
-	// 정보게시판
+	// 정보게시판 전체리스트
 	private void allBoard() {
+		// 전체보기
 		ArrayList<Board> list = dao.allBoard();
 		for (Board board : list) {
 			System.out.println(board.showInfo());
+		}
+		while (true) {
+			System.out.println("1) 상세보기   2) 단어검색   3) 이전으로   4) 메인메뉴 ");
+			nums = readInt("입력");
+			if (nums == 1) {
+				nums = readInt("상세보기 글 번호");
+				System.out.println(dao.findDate(nums).showFind());
+				List<Board> list1 = dao.replyShow(nums);
+				for (Board board : list1) {
+					System.out.println("   ▶  " + board.getB_content());
+				}
+				System.out.println("1) 댓글 추가   2) 이전으로");
+				int replyN = readInt(" > ");
+				if (replyN == 1) {
+					reply();
+				} else if (replyN == 2) {
+					allBoard();
+				}
+
+			} else if (nums == 2) {
+				findBoard();
+			} else if (nums == 3) {
+				infoBoard();
+			} else if (nums == 4) {
+				start();
+			} else {
+				System.out.println("잘못 입력하셨습니다!");
+			}
+		}
+
+	}
+
+	// 댓글추가
+	private void reply() {
+		System.out.print("댓글제목:");
+		String title = sc.nextLine();
+		System.out.print("댓글:");
+		String content = sc.nextLine();
+		dao.reply(title, content, id, nums);
+	}
+
+	// 단어검색
+	private void findBoard() {
+		String find = readStr("찾을 단어");
+		ArrayList<Board> list = dao.allBoard();
+		for (Board board : list) {
+			if (board.getB_content().contains(find)) {
+				System.out.println(board.showFind());
+			} else if (board.getB_title().contains(find)) {
+				System.out.println(board.showFind());
+			}
 		}
 	}
 
@@ -532,16 +652,6 @@ public class GreenCliApp {
 		} else {
 			System.out.println("권한이 없습니다");
 		}
-	}
-
-	// 댓글추가
-	private void reply() {
-
-	}
-
-	// 단어검색
-	private void findBoard() {
-
 	}
 
 	// INT 입력

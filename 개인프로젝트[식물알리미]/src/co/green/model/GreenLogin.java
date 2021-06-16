@@ -21,6 +21,8 @@ public class GreenLogin {
 		this.u_plant = u_plant;
 	}
 	
+	
+
 	public String getU_id() {
 		return u_id;
 	}

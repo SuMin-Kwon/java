@@ -1,9 +1,11 @@
 package co.green.access;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.green.model.Board;
 import co.green.model.Green;
+import co.green.model.GreenGrow;
 import co.green.model.GreenLogin;
 import co.green.model.GreenMemo;
 
@@ -23,10 +25,10 @@ public interface GreenAccess {
 	public void nameInsert(String plantName, String id);
 	
 	// 키우는 식물 추가
-	public String myPlant(String id);
+	public ArrayList<GreenGrow> myPlant(String id);
 
 	// 날짜 초기화
-	void changeDate(String a, String id);
+	void changeDate(String a, String id, String name);;
 
 	// 물 주는 날짜 가져오기
 	public String wDate(String id);
@@ -50,7 +52,8 @@ public interface GreenAccess {
 	public void chagePw(String b_pw, String id);
 	// 닉네임 변경
 	public void chageNname(String b_name, String id);
-	
+	// 키우는 식물 삭제
+	public void plantDelete(String id, String u_plant);	
 	
 	// 메모등록
 	public void inserMemo(String id, String date, String title, String content);
@@ -66,10 +69,22 @@ public interface GreenAccess {
 	boolean roginTrueKey(int id, String u_id);
 	// 게시글 삭제
 	public void delete(int id);
-	// 댓글
+	// 댓글 삭제
 	public void replyDelete(int b_id);
 	// 게시글 리스트
 	public ArrayList<Board> allBoard();
+	// 댓글 추가
+	void reply(String title, String content, String writer, int parentid);
+	// 상세보기
+	public Board findDate(int nums);
+	// 상세보기 밑에 댓글 보여주기
+	public List<Board> replyShow(int nums);
+
+	// 키우기 저장데이터
+	public ArrayList<GreenGrow> GrowList();
+
+	
+
 
 
 	

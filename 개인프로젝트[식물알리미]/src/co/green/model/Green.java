@@ -56,6 +56,10 @@ public class Green {
 				+ "일  영양제 주기:" + plantFood + "일";
 	}
 
+	public void print() {
+		System.out.printf("식물명 [%5s ]  물 주기 : %2d일,  가지치기 주기 : %2d일,  영양제 주기 : %2d일 ",plantName,plantWater,plantPruning,plantFood);
+		System.out.println();
+	}
 	
 	
 
