@@ -311,7 +311,7 @@ public class GreenCliApp {
 
 		ArrayList<GreenGrow> gg = dao.GrowList();
 		for (GreenGrow green : gg) {
-			if (green.getU_id().equals(id)) {
+			if (green.getU_id().equals(id) && green.getU_plant().equals(plantName)) {
 				growdate = green.getGrowDate();
 			}
 		}
