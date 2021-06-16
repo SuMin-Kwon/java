@@ -115,7 +115,7 @@ public class GreenCliApp {
 
 	// 회원가입
 	public void member() {
-		System.out.println("--------회원가입---------");
+		System.out.println("━━━━━━━━━━━━━━  회원가입  ━━━━━━━━━━━━━━");
 		id = readStr("[ 사용할 ID ]");
 		ArrayList<GreenLogin> gl = ((GreenDAO) dao).LoginList();
 		for (GreenLogin green : gl) {
@@ -398,7 +398,9 @@ public class GreenCliApp {
 
 	// 식물 기록, 성장 메모
 	private void plantMemo() {
-		System.out.println("1) 오늘의 기록   2) 간단 메모   3) 이전으로 ");
+		System.out.println("─────────────────────────────────────────");
+		System.out.println(" 1) 오늘의 기록   2) 간단 메모   3) 이전으로 ");
+		System.out.println("─────────────────────────────────────────");
 		nums = readInt("입력");
 		if (nums == 1) {
 			System.out.println("1) 물주기(√)   2) 가치치기(√)   3) 영양제 체크(√)");
@@ -430,7 +432,9 @@ public class GreenCliApp {
 	// 성장메모
 	public void memo() {
 		while (true) {
-			System.out.println("1) 메모등록   2) 메모삭제   3) 메모전체조회   4) 메모검색   5) 메인메뉴로 ");
+			System.out.println("──────────────────────────────────────────────────────────────────");
+			System.out.println("  1) 메모등록   2) 메모삭제   3) 메모전체조회   4) 메모검색   5) 메인메뉴로 ");
+			System.out.println("──────────────────────────────────────────────────────────────────");
 			nums = readInt("입력");
 			switch (nums) {
 			case 1:
@@ -475,6 +479,7 @@ public class GreenCliApp {
 
 	// 메모삭제
 	private void deleteMemo() {
+		System.out.println("※※※※※※※※※※※※※※※※※※※※※※※");
 		String date = readStr("삭제할 메모 날짜 (ex)2021-01-01");
 		System.out.println("삭제할 메모 제목");
 		String title = sc.nextLine();
@@ -493,11 +498,11 @@ public class GreenCliApp {
 	// 키울 식물 선택
 	private void selectPlant() {
 		ArrayList<Green> list = dao.listAll();
-		System.out.println("━━━━━━━ 키울 식물 목록 ━━━━━━━");
+		System.out.println("━━━━━━━━━【  키울 식물 목록 】━━━━━━━━━");
 		for (Green green : list) {
 			System.out.println(green.getG_id() + ") " + green.getPlantName());
 		}
-		System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+		System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 		int selectNum = readInt("입력");
 		for (Green green : list) {
 			if (green.getG_id() == selectNum) {
@@ -511,7 +516,7 @@ public class GreenCliApp {
 
 	// 식물등록
 	private void insertPlant() {
-		System.out.println("< 새로운 식물 등록! >");
+		System.out.println("━━━━━━━━━【  새로운 식물 등록!  】━━━━━━━━━");
 		System.out.println("등록할 식물 이름 >");
 		String plantName = sc.nextLine();
 		int plantWater = readInt("식물의 물 주기(day)");
@@ -532,7 +537,9 @@ public class GreenCliApp {
 	// 식물 정보 게시판
 	private void plantBoard() {
 		while (true) {
-			System.out.println("1) 식물도감   2) 새로운 식물 등록   3) 정보 공유   4) 메인메뉴로 ");
+			System.out.println("─────────────────────────────────────────────────────────────");
+			System.out.println("  1) 식물도감   2) 새로운 식물 등록   3) 정보 공유   4) 메인메뉴로 ");
+			System.out.println("─────────────────────────────────────────────────────────────");
 			nums = readInt("입력");
 			switch (nums) {
 			case 1:
@@ -554,7 +561,9 @@ public class GreenCliApp {
 	// 게시판 메뉴
 	private void infoBoard() {
 		while (true) {
-			System.out.println("1) 정보 게시판   2) 게시글 등록   3) 게시글 삭제   4) 메인메뉴로");
+			System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+			System.out.println("  1) 정보 게시판   2) 게시글 등록   3) 게시글 삭제   4) 메인메뉴로");
+			System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 			nums = readInt("입력");
 			switch (nums) {
 			case 1:
@@ -581,7 +590,9 @@ public class GreenCliApp {
 			System.out.println(board.showInfo());
 		}
 		while (true) {
-			System.out.println("1) 상세보기   2) 단어검색   3) 이전으로   4) 메인메뉴 ");
+			System.out.println("───────────────────────────────────────────────────");
+			System.out.println("  1) 상세보기   2) 단어검색   3) 이전으로   4) 메인메뉴 ");
+			System.out.println("───────────────────────────────────────────────────");
 			nums = readInt("입력");
 			if (nums == 1) {
 				nums = readInt("상세보기 글 번호");
@@ -590,7 +601,9 @@ public class GreenCliApp {
 				for (Board board : list1) {
 					System.out.println("   ▶  " + board.getB_content());
 				}
-				System.out.println("1) 댓글 추가   2) 이전으로");
+				System.out.println("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+				System.out.println("  1) 댓글 추가   2) 이전으로");
+				System.out.println("〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 				int replyN = readInt(" > ");
 				if (replyN == 1) {
 					reply();
@@ -613,9 +626,9 @@ public class GreenCliApp {
 
 	// 댓글추가
 	private void reply() {
-		System.out.print("댓글제목:");
+		System.out.print("댓글제목 :");
 		String title = sc.nextLine();
-		System.out.print("댓글:");
+		System.out.print("댓글 :");
 		String content = sc.nextLine();
 		dao.reply(title, content, id, nums);
 	}
@@ -644,7 +657,8 @@ public class GreenCliApp {
 
 	// 게시글 삭제
 	private void boardDelete() {
-		int b_id = readInt("삭제할 글번호 입력");
+		System.out.println("※※※※※※※※※※※※");
+		int b_id = readInt(" 삭제할 글번호 입력");
 		boolean e = dao.roginTrueKey(b_id, id);
 		if (e) {
 			dao.delete(b_id);
