@@ -180,7 +180,7 @@ public class GreenCliApp {
 	// 메인메뉴
 	public void menu() {
 		System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-		System.out.println("   1) My Page    2) 성장기록    3) 키울 식물선택    4) 식물정보    0) 종료");
+		System.out.println("   1) My Page    2) 성장기록    3) 키울 식물 선택    4) 식물정보    0) 종료");
 		System.out.println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
 	}
@@ -189,19 +189,19 @@ public class GreenCliApp {
 	private void myPage() {
 		// 비밀번호 변경, 닉네임 변경, 키우는 식물 변경
 		GreenLogin gl = dao.myPage(id);
-		System.out.println("┌───────  개인정보  ───────┐");
+		System.out.println("┌───────────  개인정보  ───────────┐");
 		System.out.println();
-		System.out.println("  아이디 > " + gl.getU_id());
+		System.out.println("    아이디 > " + gl.getU_id());
 		String pwpw = gl.getU_pw().substring(0, 2);
 		String pwpw2 = gl.getU_pw().substring(2);
-		System.out.print("  비밀번호 > " + pwpw);
+		System.out.print("    비밀번호 > " + pwpw);
 		for (int i = 0; i < pwpw2.length(); i++) {
 			System.out.print("*");
 		}
 		System.out.println();
-		System.out.println("  전화번호 > " + gl.getU_phone());
-		System.out.println("  닉네임 > " + gl.getU_Nname());
-		System.out.print("  키우는 식물 > ");
+		System.out.println("    전화번호 > " + gl.getU_phone());
+		System.out.println("    닉네임 > " + gl.getU_Nname());
+		System.out.print("    키우는 식물 > ");
 		ArrayList<GreenGrow> name = dao.myPlant(id);
 		for (GreenGrow gg : name) {
 			plantName = gg.getU_plant();
@@ -209,17 +209,22 @@ public class GreenCliApp {
 		}
 		if (plantName == null) {
 			System.out.println("없음");
+
 		}
 		System.out.println();
-		System.out.println("└────────────────────────┘");
+		System.out.println("└────────────────────────────────┘");
 		System.out.println();
-		System.out.println("1) 비밀번호 수정   2) 닉네임 수정   3) 식물 수정   4) 키우는 식물 삭제   5) 이전으로");
+		System.out.println("──────────────────────────────────────────────────────────────────────────────────");
+		System.out.println("   1) 비밀번호 수정   2) 닉네임 수정   3) 키울 식물 추가   4) 키우는 식물 삭제   5) 이전으로");
+		System.out.println("──────────────────────────────────────────────────────────────────────────────────");
 		nums = readInt("입력");
 		if (nums == 1) {
 			String b_pw = readStr(" PW 다시 입력해주세요 ");
-			if (b_pw.equals(b_pw)) {
+			if (b_pw.equals(pw)) {
 				b_pw = readStr("변경할 비밀번호");
 				dao.chagePw(b_pw, id);
+				pw = b_pw;
+				myPage();
 			} else {
 				System.out.println("비밀번호가 일치하지 않습니다!");
 				myPage();
@@ -234,9 +239,12 @@ public class GreenCliApp {
 			myPage();
 
 		} else if (nums == 4) {
-			System.out.println("삭제할 식물 이름");
+			System.out.println("※※※※※※※※※※※※※※※※※※※※");
+			System.out.println(" 삭제할 식물 이름");
 			String yn = sc.nextLine();
 			dao.plantDelete(id, yn);
+			plantName = null;
+			myPage();
 		} else if (nums == 5) {
 			start();
 		}
@@ -258,7 +266,7 @@ public class GreenCliApp {
 	private void myPlant() {
 		System.out.println();
 		// 현재날짜
-		System.out.println("< " + localDate + " > ");
+		System.out.println(" < " + localDate + " > ");
 
 		// 로그인 정보에서 닉네임 가져오기
 		ArrayList<GreenLogin> gl = ((GreenDAO) dao).LoginList();
@@ -270,18 +278,19 @@ public class GreenCliApp {
 		// 닉네임 + 랜덤문구
 		System.out.println(Nname + "님, " + getRandTestString());
 		// 현재키우는 식물
-
+		System.out.println();
 		System.out.println("현재 키우는 식물: ");
 		ArrayList<GreenGrow> name = dao.myPlant(id);
 		for (GreenGrow gg : name) {
 			plantName = gg.getU_plant();
-			System.out.println(plantName);
+			System.out.print(" [ " + plantName + " ] ");
 			if (!(plantName == null)) {
 				growDate();
+				System.out.println();
 			}
 		}
 		if (plantName == null) {
-			System.out.println("없음");
+			System.out.print("  →  없음 ");
 		}
 		System.out.println();
 		// 오늘 해야할일 : 물주기, 가지치기, 영양제체크 뜨도록
@@ -298,9 +307,8 @@ public class GreenCliApp {
 //		 조건 : 물,가지치기,영양제날이 모두 아닐때는 할일이 없음!
 		if (plantName == null) {
 			System.out.println("없음");
-		}
-		else if ( !(waterDay.isEqual(localDate)) && !(pruningDay.isEqual(localDate)) &&
-				!(plantFoodDay.isEqual(localDate)) ) {
+		} else if (!(waterDay.isEqual(localDate)) && !(pruningDay.isEqual(localDate))
+				&& !(plantFoodDay.isEqual(localDate))) {
 			System.out.println("없음");
 		}
 		System.out.println();
@@ -325,7 +333,7 @@ public class GreenCliApp {
 		long days = 0;
 		bDate.set(year, month, day);
 		days = (nDate.getTimeInMillis() - bDate.getTimeInMillis()) / (24 * 60 * 60 * 1000);
-		System.out.println(" ♣ 식물 키우기 " + (days + 1) + "일째");
+		System.out.print("  ♣ 식물 키우기 " + (days + 1) + "일째");
 	}
 
 	// 물 주는 날!
