@@ -3,12 +3,14 @@ package 백준;
 import java.util.Scanner;
 
 public class Jayeunsu {
-	
+
 	public static void main(String[] args) {
 		
 		Scanner scanner = new Scanner(System.in);
 		
 		
+		int result;
+		int count = 0;
 		int nums = scanner.nextInt(); // 숫자 입력받음
 		int [] number = new int[nums]; // 배열 생성
 		
@@ -16,8 +18,18 @@ public class Jayeunsu {
 			number[i] = i+1;
 		}
 		
-		
-		
-		scanner.close();
-	}	
+		while(true) {
+				int nansu = 0;
+				result = number[nansu];
+				if( result == nums ) {
+					count = count + 1;
+				}else if (result < nums) {
+					nansu++;
+					continue;
+				}else {
+					break;
+				}
+			}
+		}
+
 }
