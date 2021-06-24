@@ -13,7 +13,22 @@ public class Jayeunsu {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		int n = Integer.parseInt(br.readLine());
+		int count = 1; // n 숫자값 1번은 무조건 들어가니깐
 		
+		for(int i = 1; i< (n/2) +1; i++) {
+			int sum = i;
+			for (int j= i+1; i <(n/2) + 2; j++) {
+				if (sum ==n) {
+					count = count + 1;
+					break;
+				}
+				if (sum > n) {
+					break;
+				}
+				sum = sum + j;
+			}
+		}
+		System.out.println(count);
 		
 	//	Scanner scanner = new Scanner(System.in);
 	//	
