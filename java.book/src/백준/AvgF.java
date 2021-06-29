@@ -3,7 +3,7 @@ package 백준;
 import java.util.Scanner;
 
 public class AvgF {
-	
+	// 백준문제
 	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
