@@ -20,7 +20,7 @@ public class MonthDay {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
 		LocalDate gijundate = LocalDate.parse(date, formatter);
 		
-		
+		// 요일계싼
 		
 	}
 
