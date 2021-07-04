@@ -20,8 +20,12 @@ public class MonthDay {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
 		LocalDate gijundate = LocalDate.parse(date, formatter);
 		
-		// 요일계싼
+		// 요일계산
 		
+		//1. 기준날짜에서 입력한 날짜를 빼서 날짜로 요일을 계산
+		
+		//2. 입력한 날짜를 7로 나누는데, 월, 일 ,년도 다 나눠서 계산해야하므로
+		//   월의 마지막일의 조건을 달아줘야함
 	}
 
 }
